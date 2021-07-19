@@ -1,0 +1,70 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AllSafe Availability Live</title>
+</head>
+<body>
+<div id="chartContainer" style="height: 370px; width:100%;"></div>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+<script>
+    window.onload = function () {
+
+        var dps = []; // dataPoints
+        var chart = new CanvasJS.Chart("chartContainer", {
+            animationEnabled: true,
+            theme: "light2",
+            title: {
+                text: "AllSafe Site Availability Graph"
+            },
+            axisX: {
+                title: "Date and Time"
+            },
+            data: [{
+                type: "column",
+                xValueType: "dateTime",
+                xValueFormatString: "DDDD MMM YYYY HH:mm:ss",
+                dataPoints: dps,
+            }]
+        });
+
+        var updateInterval = 1000; // 1 second
+
+        var updateChart = function () {
+
+            $.ajax({
+                type: "get",
+                url: "{% url 'livegraph:site-availability-ajax' %}",
+                success: function (data) {
+                    dps.length = 0;
+                    for (var index = 0; index < data.length; index++) {
+                        var availability = data[index]
+                        var color
+                        if (availability["is_uptime"]) {
+                            color = "green"
+                        } else {
+                            color = "red"
+                        }
+                        dps.push({
+                            y: 100,
+                            x: new Date(availability["created_at"]),
+                            color: color,
+                        });
+                    }
+                    return data;
+                },
+                error: function () {
+                    console.log("An error occurred");
+                }
+            });
+            chart.render();
+        };
+
+        setInterval(function () {
+            updateChart()
+        }, updateInterval);
+    }
+</script>
+</body>
+</html>
