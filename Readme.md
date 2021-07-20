@@ -12,7 +12,7 @@ Build a chart or graph using the data stored in the database to plot and show th
 
 **Project Setup Instructions:** </br>
 1. Run pipenv install </br>
-2. Need following environment variables:
+2. Need following environment variables in .env file
 - SECRET_KEY
 - DEBUG
 - ALLOWED_HOSTS
