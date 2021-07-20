@@ -24,6 +24,10 @@ Build a chart or graph using the data stored in the database to plot and show th
 - REDIS_URL (eg: redis://localhost:6379 for local)
 - REDIS_CELERY_NAMESPACE (eg: 0)
 - REDIS_APP_NAMESPACE (eg: allsafe)
+3. Runserver
+4. Run celery worker `celery -A allsafe worker --pool=solo -l info` for windows or just `celery -A worker worker -l info`
+5. Run celery beat `celery -A allsafe beat -l info`
 
-Example of final result:
+Example of final result: </br>
+Each bar is a second and 20 most recent seconds are displayed at every new second. 
 <img src="assets/images/availability.jpg">
